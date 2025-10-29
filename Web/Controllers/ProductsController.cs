@@ -15,14 +15,12 @@ namespace ProductManagement.Controllers
             _productService = productService;
         }
 
-        // GET: /Products
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetAllAsync();
             return View(products);
         }
 
-        // GET: /Products/Details/{id}
         public async Task<IActionResult> Details(Guid id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -32,13 +30,11 @@ namespace ProductManagement.Controllers
             return View(product);
         }
 
-        // GET: /Products/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: /Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateProductDto createDto)
@@ -61,7 +57,6 @@ namespace ProductManagement.Controllers
             }
         }
 
-        // GET: /Products/Edit/{id}
         public async Task<IActionResult> Edit(Guid id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -80,7 +75,6 @@ namespace ProductManagement.Controllers
             return View(updateDto);
         }
 
-        // POST: /Products/Edit/{id}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, UpdateProductDto updateDto)
@@ -103,7 +97,6 @@ namespace ProductManagement.Controllers
             }
         }
 
-        // GET: /Products/Delete/{id}
         public async Task<IActionResult> Delete(Guid id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -113,7 +106,6 @@ namespace ProductManagement.Controllers
             return View(product);
         }
 
-        // POST: /Products/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)

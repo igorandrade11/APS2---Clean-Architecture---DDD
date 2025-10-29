@@ -17,8 +17,6 @@ namespace ProductManagement.Infrastructure.Repositories
         {
             _context = context;
         }
-
-        // ✅ CORREÇÃO: O '?' na assinatura do método.
         public async Task<Product?> GetByIdAsync(Guid id)
         {
             return await _context.Products.FindAsync(id);

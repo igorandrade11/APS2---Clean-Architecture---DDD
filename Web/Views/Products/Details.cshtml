@@ -1,0 +1,30 @@
+@model ProductManagement.Application.DTOs.ProductDto
+
+<h1>Detalhes do Produto</h1>
+
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Nome</th>
+        <td>@Model.Name</td>
+    </tr>
+    <tr>
+        <th>Categoria</th>
+        <td>@Model.Category</td>
+    </tr>
+    <tr>
+        <th>Descrição</th>
+        <td>@Model.Description</td>
+    </tr>
+    <tr>
+        <th>Preço</th>
+        <td>@Model.Price</td>
+    </tr>
+    <tr>
+        <th>Quantidade</th>
+        <td>@Model.StockQuantity</td>
+    </tr>
+</table>
+
+<a href="@Url.Action("Edit", new { id = Model.Id })">Editar</a> |
+<a href="@Url.Action("Delete", new { id = Model.Id })">Excluir</a> |
+<a href="@Url.Action("Index")">Voltar</a>

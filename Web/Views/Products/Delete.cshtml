@@ -1,0 +1,11 @@
+@model ProductManagement.Application.DTOs.ProductDto
+
+<h1>Excluir Produto</h1>
+
+<p>Tem certeza que deseja excluir o produto <strong>@Model.Name</strong>?</p>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit">Sim, Excluir</button>
+    <a href="@Url.Action("Index")">Cancelar</a>
+</form>

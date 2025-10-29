@@ -1,0 +1,33 @@
+@model IEnumerable<ProductManagement.Application.DTOs.ProductDto>
+
+<h1>Produtos</h1>
+
+<table border="1" cellpadding="5">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Category</td>
+                <td>@p.Price</td>
+                <td>@p.StockQuantity</td>
+                <td>
+                    <a href="@Url.Action("Details", new { id = p.Id })">Detalhes</a> |
+                    <a href="@Url.Action("Edit", new { id = p.Id })">Editar</a> |
+                    <a href="@Url.Action("Delete", new { id = p.Id })">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create")">Adicionar Produto</a>

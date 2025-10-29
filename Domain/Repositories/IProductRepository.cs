@@ -1,5 +1,3 @@
-// Domain/Repositories/IProductRepository.cs
-
 using ProductManagement.Domain.Entities;
 using System;
 using System.Threading.Tasks;
@@ -9,7 +7,6 @@ namespace ProductManagement.Domain.Repositories
 {
     public interface IProductRepository
     {
-        // ✅ CORREÇÃO CS8613: Adição do '?' para permitir o retorno nulo.
         Task<Product?> GetByIdAsync(Guid id); 
 
         Task<IEnumerable<Product>> GetAllAsync();

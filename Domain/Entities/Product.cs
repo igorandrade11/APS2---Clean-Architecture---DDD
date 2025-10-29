@@ -9,11 +9,9 @@ namespace ProductManagement.Domain.Entities
         
         [Required(ErrorMessage = "O nome do produto é obrigatório")]
         [StringLength(100, MinimumLength = 3, ErrorMessage = "O nome deve ter entre 3 e 100 caracteres")]
-        // ✅ CORREÇÃO CS8618: Inicializado para string.Empty
         public string Name { get; private set; } = string.Empty; 
         
         [StringLength(500, ErrorMessage = "A descrição não pode exceder 500 caracteres")]
-        // ✅ CORREÇÃO CS8618: Inicializado para string.Empty
         public string Description { get; private set; } = string.Empty;
         
         [Required(ErrorMessage = "O preço é obrigatório")]
@@ -26,14 +24,11 @@ namespace ProductManagement.Domain.Entities
         
         [Required(ErrorMessage = "A categoria é obrigatória")]
         [StringLength(50, ErrorMessage = "A categoria não pode exceder 50 caracteres")]
-        // ✅ CORREÇÃO CS8618: Inicializado para string.Empty
         public string Category { get; private set; } = string.Empty;
         
         public bool IsActive { get; private set; }
         public DateTime CreatedAt { get; private set; }
         public DateTime UpdatedAt { get; private set; }
-
-        // Construtor privado para Entity Framework e para forçar o uso do método Create
         private Product() { }
 
         public static Product Create(string name, string description, decimal price, int stockQuantity, string category)
@@ -57,8 +52,6 @@ namespace ProductManagement.Domain.Entities
 
         public void Update(string name, string description, decimal price, int stockQuantity, string category)
         {
-            // O uso de 'private set' garante que o mapeador do EF (ou a atribuição manual)
-            // possa definir os valores, mas o resto do código só pode usar este método.
             Name = name;
             Description = description;
             Price = price;
