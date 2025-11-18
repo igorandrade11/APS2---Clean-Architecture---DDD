@@ -14,60 +14,38 @@ namespace ProductManagement.Domain.Entities
         [StringLength(500, ErrorMessage = "A descrição não pode exceder 500 caracteres")]
         public string Description { get; private set; } = string.Empty;
         
-        [Required(ErrorMessage = "O preço é obrigatório")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "O preço deve ser maior que zero")]
+        [Range(0.01, 9999999.99, ErrorMessage = "O preço deve ser maior que zero")]
         public decimal Price { get; private set; }
         
-        [Required(ErrorMessage = "A quantidade em estoque é obrigatória")]
-        [Range(0, int.MaxValue, ErrorMessage = "A quantidade não pode ser negativa")]
+        [Range(0, int.MaxValue, ErrorMessage = "A quantidade em estoque não pode ser negativa")]
         public int StockQuantity { get; private set; }
-        
-        [Required(ErrorMessage = "A categoria é obrigatória")]
-        [StringLength(50, ErrorMessage = "A categoria não pode exceder 50 caracteres")]
-        public string Category { get; private set; } = string.Empty;
-        
-        public bool IsActive { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public DateTime UpdatedAt { get; private set; }
-        private Product() { }
 
-        public static Product Create(string name, string description, decimal price, int stockQuantity, string category)
+        public Guid CategoryId { get; private set; }
+        public Category? Category { get; private set; }
+
+        protected Product() { }
+
+        public Product(string name, decimal price, int stockQuantity, Guid categoryId, string? description = null)
         {
-            var product = new Product
-            {
-                Id = Guid.NewGuid(),
-                Name = name,
-                Description = description,
-                Price = price,
-                StockQuantity = stockQuantity,
-                Category = category,
-                IsActive = true,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            product.Validate();
-            return product;
-        }
-
-        public void Update(string name, string description, decimal price, int stockQuantity, string category)
-        {
+            Id = Guid.NewGuid();
             Name = name;
-            Description = description;
             Price = price;
             StockQuantity = stockQuantity;
-            Category = category;
-            UpdatedAt = DateTime.UtcNow;
+            CategoryId = categoryId;
+            Description = description ?? string.Empty;
+
             Validate();
         }
 
-        public void UpdateStock(int quantity)
+        public void Update(string name, decimal price, int stockQuantity, Guid categoryId, string? description = null)
         {
-            if (quantity < 0)
-                throw new InvalidOperationException("A quantidade em estoque não pode ser negativa");
-            
-            StockQuantity = quantity;
-            UpdatedAt = DateTime.UtcNow;
+            Name = name;
+            Price = price;
+            StockQuantity = stockQuantity;
+            CategoryId = categoryId;
+            Description = description ?? string.Empty;
+
+            Validate();
         }
 
         private void Validate()
@@ -81,8 +59,8 @@ namespace ProductManagement.Domain.Entities
             if (StockQuantity < 0)
                 throw new InvalidOperationException("A quantidade em estoque não pode ser negativa");
             
-            if (string.IsNullOrWhiteSpace(Category))
-                throw new InvalidOperationException("A categoria não pode ser vazia");
+            if (CategoryId == Guid.Empty)
+                throw new InvalidOperationException("Produto deve pertencer a uma categoria válida");
         }
     }
 }

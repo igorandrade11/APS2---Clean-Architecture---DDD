@@ -95,6 +95,11 @@ namespace ProductManagement.Application.Services
             await _productRepository.UpdateAsync(product);
             return MapToDto(product);
         }
+        public async Task<IEnumerable<ProductDto>> SearchAsync(string? query)
+        {
+            var products = await _productRepository.SearchAsync(query);
+            return products.Select(MapToDto);
+        }
 
         private ProductDto MapToDto(Product product)
         {

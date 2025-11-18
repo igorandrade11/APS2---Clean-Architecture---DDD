@@ -1,19 +1,17 @@
+using ProductManagement.Application.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProductManagement.Application.DTOs;
 
 namespace ProductManagement.Application.Services
 {
     public interface IProductService
     {
-        Task<ProductDto> GetByIdAsync(Guid id);
         Task<IEnumerable<ProductDto>> GetAllAsync();
-        Task<IEnumerable<ProductDto>> GetByCategoryAsync(string category);
-        Task<IEnumerable<ProductDto>> GetActiveProductsAsync();
-        Task<ProductDto> CreateAsync(CreateProductDto createDto);
-        Task<ProductDto> UpdateAsync(Guid id, UpdateProductDto updateDto);
+        Task<ProductDto?> GetByIdAsync(Guid id);
+        Task<Guid> CreateAsync(ProductDto dto);
+        Task UpdateAsync(Guid id, ProductDto dto);
         Task DeleteAsync(Guid id);
-        Task<ProductDto> UpdateStockAsync(Guid id, int quantity);
+        Task<IEnumerable<ProductDto>> SearchAsync(string? query);
     }
 }

@@ -1,77 +1,77 @@
+using Microsoft.EntityFrameworkCore;
+using ProductManagement.Application.Interfaces;
+using ProductManagement.Domain.Entities;
+using ProductManagement.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using ProductManagement.Domain.Entities;
-using ProductManagement.Domain.Repositories;
-using ProductManagement.Infrastructure.Data;
 
 namespace ProductManagement.Infrastructure.Repositories
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _ctx;
+        public ProductRepository(ApplicationDbContext ctx) => _ctx = ctx;
 
-        public ProductRepository(ApplicationDbContext context)
+        public async Task AddAsync(Product product)
         {
-            _context = context;
-        }
-        public async Task<Product?> GetByIdAsync(Guid id)
-        {
-            return await _context.Products.FindAsync(id);
-        }
-
-        public async Task<IEnumerable<Product>> GetAllAsync()
-        {
-            return await _context.Products
-                .OrderByDescending(p => p.CreatedAt)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetByCategoryAsync(string category)
-        {
-            return await _context.Products
-                .Where(p => p.Category == category)
-                .OrderByDescending(p => p.CreatedAt)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<Product>> GetActiveProductsAsync()
-        {
-            return await _context.Products
-                .Where(p => p.IsActive)
-                .OrderByDescending(p => p.CreatedAt)
-                .ToListAsync();
-        }
-
-        public async Task<Product> AddAsync(Product product)
-        {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
-            return product;
-        }
-
-        public async Task UpdateAsync(Product product)
-        {
-            _context.Products.Update(product);
-            await _context.SaveChangesAsync();
+            await _ctx.Products.AddAsync(product);
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            // O GetByIdAsync agora retorna Product?
-            var product = await GetByIdAsync(id); 
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
-            }
+            var entity = await _ctx.Products.FindAsync(id);
+            if (entity == null) return;
+            _ctx.Products.Remove(entity);
+            await _ctx.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Product>> GetAllAsync()
+        {
+            return await _ctx.Products
+                        .Include(p => p.Category)
+                        .AsNoTracking()
+                        .ToListAsync();
+        }
+
+        public async Task<Product?> GetByIdAsync(Guid id)
+        {
+            return await _ctx.Products
+                        .Include(p => p.Category)
+                        .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task UpdateAsync(Product product)
+        {
+            _ctx.Products.Update(product);
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task<bool> ExistsAsync(Guid id)
         {
-            return await _context.Products.AnyAsync(p => p.Id == id);
+            return await _ctx.Products.AnyAsync(p => p.Id == id);
+        }
+
+        public async Task<IEnumerable<Product>> SearchAsync(string? query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return await GetAllAsync();
+            }
+
+            query = query.Trim();
+
+            return await _ctx.Products
+                .Include(p => p.Category)
+                .Where(p =>
+                    EF.Functions.Like(p.Name, $"%{query}%")
+                    || EF.Functions.Like(p.Description, $"%{query}%")
+                    || (p.Category != null && EF.Functions.Like(p.Category.Name, $"%{query}%"))
+                )
+                .AsNoTracking()
+                .ToListAsync();
         }
     }
 }

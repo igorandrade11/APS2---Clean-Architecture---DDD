@@ -2,32 +2,28 @@
 
 <h1>Produtos</h1>
 
-<table border="1" cellpadding="5">
-    <thead>
-        <tr>
-            <th>Nome</th>
-            <th>Categoria</th>
-            <th>Preço</th>
-            <th>Quantidade</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model)
-        {
-            <tr>
-                <td>@p.Name</td>
-                <td>@p.Category</td>
-                <td>@p.Price</td>
-                <td>@p.StockQuantity</td>
-                <td>
-                    <a href="@Url.Action("Details", new { id = p.Id })">Detalhes</a> |
-                    <a href="@Url.Action("Edit", new { id = p.Id })">Editar</a> |
-                    <a href="@Url.Action("Delete", new { id = p.Id })">Excluir</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div>
+    <input id="searchBox" type="text" placeholder="Buscar produtos..." style="width:250px; padding:6px; margin-bottom:10px;" />
+</div>
 
-<a href="@Url.Action("Create")">Adicionar Produto</a>
+<div id="searchResults">
+    @await Html.PartialAsync("_ProductListPartial", Model)
+</div>
+
+<a href="@Url.Action("Create", "Product")">Adicionar Produto</a>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(function () {
+        $("#searchBox").on("input", function () {
+            var q = $(this).val();
+            $.get("@Url.Action("Search", "Product")", { q: q })
+                .done(function (html) {
+                    $("#searchResults").html(html);
+                })
+                .fail(function () {
+                    alert("Erro ao buscar os produtos.");
+                });
+        });
+    });
+</script>

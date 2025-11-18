@@ -23,6 +23,10 @@ namespace ProductManagement.Application.DTOs
         [Range(0, int.MaxValue)]
         public int StockQuantity { get; set; }
 
+        public Guid CategoryId { get; set; }
+        
+        public string? CategoryName { get; set; }
+
         [Required]
         [StringLength(50)]
         public string Category { get; set; } = string.Empty;

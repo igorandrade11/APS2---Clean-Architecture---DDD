@@ -15,6 +15,13 @@ namespace ProductManagement.Controllers
             _productService = productService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Search(string q)
+        {
+            var results = await _productService.SearchAsync(q);
+            return PartialView("_ProductListPartial", results);
+        }
+
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetAllAsync();
