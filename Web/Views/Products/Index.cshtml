@@ -10,14 +10,14 @@
     @await Html.PartialAsync("_ProductListPartial", Model)
 </div>
 
-<a href="@Url.Action("Create", "Product")">Adicionar Produto</a>
+<a href="@Url.Action("Create", "Products")">Adicionar Produto</a>
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(function () {
         $("#searchBox").on("input", function () {
             var q = $(this).val();
-            $.get("@Url.Action("Search", "Product")", { q: q })
+            $.get("@Url.Action("Search", "Products")", { q: q })
                 .done(function (html) {
                     $("#searchResults").html(html);
                 })

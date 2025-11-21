@@ -48,10 +48,10 @@ namespace ProductManagement.Application.Services
         {
             var product = Product.Create(
                 createDto.Name,
-                createDto.Description,
+                createDto.Description ?? string.Empty,
                 createDto.Price,
                 createDto.StockQuantity,
-                createDto.Category
+                createDto.CategoryId
             );
 
             var createdProduct = await _productRepository.AddAsync(product);
@@ -66,10 +66,10 @@ namespace ProductManagement.Application.Services
 
             product.Update(
                 updateDto.Name,
-                updateDto.Description,
+                updateDto.Description ?? string.Empty,
                 updateDto.Price,
                 updateDto.StockQuantity,
-                updateDto.Category
+                updateDto.CategoryId
             );
 
             await _productRepository.UpdateAsync(product);
@@ -95,6 +95,7 @@ namespace ProductManagement.Application.Services
             await _productRepository.UpdateAsync(product);
             return MapToDto(product);
         }
+
         public async Task<IEnumerable<ProductDto>> SearchAsync(string? query)
         {
             var products = await _productRepository.SearchAsync(query);
@@ -110,7 +111,8 @@ namespace ProductManagement.Application.Services
                 Description = product.Description,
                 Price = product.Price,
                 StockQuantity = product.StockQuantity,
-                Category = product.Category,
+                CategoryId = product.CategoryId,
+                CategoryName = product.Category != null ? product.Category.Name : null,
                 IsActive = product.IsActive,
                 CreatedAt = product.CreatedAt,
                 UpdatedAt = product.UpdatedAt

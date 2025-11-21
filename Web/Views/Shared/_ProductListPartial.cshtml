@@ -19,9 +19,9 @@
                 <td>@p.Price</td>
                 <td>@p.StockQuantity</td>
                 <td>
-                    <a href="@Url.Action("Details", "Product", new { id = p.Id })">Detalhes</a> |
-                    <a href="@Url.Action("Edit", "Product", new { id = p.Id })">Editar</a> |
-                    <a href="@Url.Action("Delete", "Product", new { id = p.Id })">Excluir</a>
+                    <a href="@Url.Action("Details", "Products", new { id = p.Id })">Detalhes</a> |
+                    <a href="@Url.Action("Edit", "Products", new { id = p.Id })">Editar</a> |
+                    <a href="@Url.Action("Delete", "Products", new { id = p.Id })">Excluir</a>
                 </td>
             </tr>
         }
