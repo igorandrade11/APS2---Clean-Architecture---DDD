@@ -1,8 +1,8 @@
-@model ProductManagement.Application.DTOs.ProductDto
+@model ProductManagement.Application.DTOs.UpdateProductDto
 
 <h1>Editar Produto</h1>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" method="post" asp-route-id="@ViewBag.ProductId">
     <div>
         <label>Nome</label>
         <input asp-for="Name" />
@@ -25,9 +25,15 @@
     </div>
     <div>
         <label>Categoria</label>
-        <input asp-for="Category" />
-        <span asp-validation-for="Category"></span>
+        <select asp-for="CategoryId" asp-items="(IEnumerable<SelectListItem>)ViewBag.Categories">
+            <option value="">-- selecione --</option>
+        </select>
+        <span asp-validation-for="CategoryId"></span>
     </div>
     <button type="submit">Salvar Alterações</button>
     <a href="@Url.Action("Index")">Cancelar</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

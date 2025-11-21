@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ProductManagement.Application.DTOs;
 using ProductManagement.Application.Services;
 
@@ -9,10 +10,12 @@ namespace ProductManagement.Controllers
     public class ProductsController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICategoryService _categoryService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -37,9 +40,10 @@ namespace ProductManagement.Controllers
             return View(product);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            await PopulateCategories();
+            return View(new CreateProductDto());
         }
 
         [HttpPost]
@@ -48,7 +52,8 @@ namespace ProductManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("Create", createDto);
+                await PopulateCategories();
+                return View(createDto);
             }
 
             try
@@ -60,7 +65,8 @@ namespace ProductManagement.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                return View("Create", createDto);
+                await PopulateCategories();
+                return View(createDto);
             }
         }
 
@@ -76,9 +82,11 @@ namespace ProductManagement.Controllers
                 Description = product.Description,
                 Price = product.Price,
                 StockQuantity = product.StockQuantity,
-                Category = product.Category
+                CategoryId = product.CategoryId
             };
 
+            await PopulateCategories();
+            ViewBag.ProductId = id;
             return View(updateDto);
         }
 
@@ -88,7 +96,9 @@ namespace ProductManagement.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View("Edit", updateDto);
+                await PopulateCategories();
+                ViewBag.ProductId = id;
+                return View(updateDto);
             }
 
             try
@@ -100,7 +110,9 @@ namespace ProductManagement.Controllers
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
-                return View("Edit", updateDto);
+                await PopulateCategories();
+                ViewBag.ProductId = id;
+                return View(updateDto);
             }
         }
 
@@ -128,6 +140,12 @@ namespace ProductManagement.Controllers
                 TempData["Error"] = ex.Message;
                 return RedirectToAction("Index", "Products");
             }
+        }
+
+        private async Task PopulateCategories()
+        {
+            var cats = await _categoryService.GetAllAsync();
+            ViewBag.Categories = new SelectList(cats, "Id", "Name");
         }
     }
 }

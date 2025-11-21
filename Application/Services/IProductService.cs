@@ -9,8 +9,8 @@ namespace ProductManagement.Application.Services
     {
         Task<IEnumerable<ProductDto>> GetAllAsync();
         Task<ProductDto?> GetByIdAsync(Guid id);
-        Task<Guid> CreateAsync(ProductDto dto);
-        Task UpdateAsync(Guid id, ProductDto dto);
+        Task<ProductDto> CreateAsync(CreateProductDto createDto);
+        Task<ProductDto> UpdateAsync(Guid id, UpdateProductDto updateDto);
         Task DeleteAsync(Guid id);
         Task<IEnumerable<ProductDto>> SearchAsync(string? query);
     }

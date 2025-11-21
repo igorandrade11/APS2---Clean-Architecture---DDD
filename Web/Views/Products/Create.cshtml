@@ -25,9 +25,15 @@
     </div>
     <div>
         <label>Categoria</label>
-        <input asp-for="Category" />
-        <span asp-validation-for="Category"></span>
+        <select asp-for="CategoryId" asp-items="(IEnumerable<SelectListItem>)ViewBag.Categories">
+            <option value="">-- selecione --</option>
+        </select>
+        <span asp-validation-for="CategoryId"></span>
     </div>
     <button type="submit">Salvar</button>
     <a href="@Url.Action("Index")">Cancelar</a>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

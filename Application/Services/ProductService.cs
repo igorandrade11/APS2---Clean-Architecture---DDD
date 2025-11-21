@@ -54,8 +54,8 @@ namespace ProductManagement.Application.Services
                 createDto.CategoryId
             );
 
-            var createdProduct = await _productRepository.AddAsync(product);
-            return MapToDto(createdProduct);
+            await _productRepository.AddAsync(product);
+            return MapToDto(product);
         }
 
         public async Task<ProductDto> UpdateAsync(Guid id, UpdateProductDto updateDto)
